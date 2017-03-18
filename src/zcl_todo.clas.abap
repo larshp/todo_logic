@@ -1,23 +1,27 @@
-CLASS zcl_todo DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+class ZCL_TODO definition
+  public
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    METHODS create
-      IMPORTING
-        !is_data TYPE ztodo_data
-      RETURNING
-        VALUE(rs_key) TYPE ztodo_key.
-    METHODS delete
-      IMPORTING
-        !is_key TYPE ztodo_key.
-    METHODS list
-      RETURNING VALUE(rt_list) TYPE ztodo_tt.
-    METHODS update
-      IMPORTING
-        !is_key TYPE ztodo_key
-        !is_data TYPE ztodo_data.
+  interfaces IF_HTTP_EXTENSION .
+  interfaces ZIF_SWAG_HANDLER .
+
+  methods CREATE
+    importing
+      !IS_DATA type ZTODO_DATA
+    returning
+      value(RS_KEY) type ZTODO_KEY .
+  methods DELETE
+    importing
+      !IS_KEY type ZTODO_KEY .
+  methods LIST
+    returning
+      value(RT_LIST) type ZTODO_TT .
+  methods UPDATE
+    importing
+      !IS_KEY type ZTODO_KEY
+      !IS_DATA type ZTODO_DATA .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -55,6 +59,23 @@ CLASS ZCL_TODO IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD if_http_extension~handle_request.
+
+    DATA: lo_swag TYPE REF TO zcl_swag.
+
+
+    CREATE OBJECT lo_swag
+      EXPORTING
+        ii_server = server
+        iv_base   = '/sap/ztodo/rest'
+        iv_title  = 'todo'.
+    lo_swag->register( me ).
+
+    lo_swag->run( ).
+
+  ENDMETHOD.
+
+
   METHOD list.
 
     SELECT * FROM ztodo INTO TABLE rt_list.             "#EC CI_NOWHERE
@@ -72,6 +93,38 @@ CLASS ZCL_TODO IMPLEMENTATION.
 
     UPDATE ztodo FROM ls_todo.
     ASSERT sy-subrc = 0.
+
+  ENDMETHOD.
+
+
+  METHOD zif_swag_handler~meta.
+
+    FIELD-SYMBOLS: <ls_meta> LIKE LINE OF rt_meta.
+
+
+    APPEND INITIAL LINE TO rt_meta ASSIGNING <ls_meta>.
+    <ls_meta>-summary   = 'List'(001).
+    <ls_meta>-url-regex = '/list$'.
+    <ls_meta>-method    = zcl_swag=>c_method-get.
+    <ls_meta>-handler   = 'LIST'.
+
+    APPEND INITIAL LINE TO rt_meta ASSIGNING <ls_meta>.
+    <ls_meta>-summary   = 'Create'(002).
+    <ls_meta>-url-regex = '/create$'.
+    <ls_meta>-method    = zcl_swag=>c_method-post.
+    <ls_meta>-handler   = 'CREATE'.
+
+    APPEND INITIAL LINE TO rt_meta ASSIGNING <ls_meta>.
+    <ls_meta>-summary   = 'Delete'(003).
+    <ls_meta>-url-regex = '/delete$'.
+    <ls_meta>-method    = zcl_swag=>c_method-post.
+    <ls_meta>-handler   = 'DELETE'.
+
+    APPEND INITIAL LINE TO rt_meta ASSIGNING <ls_meta>.
+    <ls_meta>-summary   = 'Update'(004).
+    <ls_meta>-url-regex = '/update$'.
+    <ls_meta>-method    = zcl_swag=>c_method-post.
+    <ls_meta>-handler   = 'UPDATE'.
 
   ENDMETHOD.
 ENDCLASS.
