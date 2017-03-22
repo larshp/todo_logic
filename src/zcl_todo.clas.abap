@@ -20,7 +20,7 @@ public section.
       value(RT_LIST) type ZTODO_TT .
   methods UPDATE
     importing
-      !IS_KEY type ZTODO_KEY
+      !IV_GUID type ZTODO_KEY-GUID
       !IS_DATA type ZTODO_DATA .
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -88,7 +88,7 @@ CLASS ZCL_TODO IMPLEMENTATION.
     DATA: ls_todo TYPE ztodo.
 
 
-    MOVE-CORRESPONDING is_key TO ls_todo.
+    ls_todo-guid = iv_guid.
     MOVE-CORRESPONDING is_data TO ls_todo.
 
     UPDATE ztodo FROM ls_todo.
@@ -122,7 +122,8 @@ CLASS ZCL_TODO IMPLEMENTATION.
 
     APPEND INITIAL LINE TO rt_meta ASSIGNING <ls_meta>.
     <ls_meta>-summary   = 'Update'(004).
-    <ls_meta>-url-regex = '/update$'.
+    <ls_meta>-url-regex = '/update/(w+)$'.
+    APPEND 'IV_GUID' TO <ls_meta>-url-group_names.
     <ls_meta>-method    = zcl_swag=>c_method-post.
     <ls_meta>-handler   = 'UPDATE'.
 
