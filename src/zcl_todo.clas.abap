@@ -1,9 +1,6 @@
-CLASS zcl_todo DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS zcl_todo DEFINITION PUBLIC CREATE PUBLIC.
 
   PUBLIC SECTION.
-
     METHODS create
       IMPORTING
         !is_data      TYPE ztodo_data
