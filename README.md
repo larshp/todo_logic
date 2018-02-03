@@ -1,4 +1,4 @@
 # todo_logic
 todo logic
 
-See branch https://github.com/larshp/todo_logic/tree/web for web enabled version
+Example https://github.com/larshp/ABAP-Swagger based project
