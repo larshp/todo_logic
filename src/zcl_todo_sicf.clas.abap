@@ -29,7 +29,7 @@ CLASS ZCL_TODO_SICF IMPLEMENTATION.
     lv_path = server->request->get_header_field( '~path' ).
 
     IF lv_path CP '/sap/ztodo/rest/*'.
-      CREATE OBJECT li_http TYPE zcl_todo.
+      CREATE OBJECT li_http TYPE zcl_todo_swagger.
       li_http->handle_request( server ).
     ELSE.
       FIND REGEX '/sap/ztodo/static/(.*)'
