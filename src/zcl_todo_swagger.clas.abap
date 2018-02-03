@@ -37,7 +37,7 @@ CLASS ZCL_TODO_SWAGGER IMPLEMENTATION.
 
     CREATE OBJECT lo_todo.
 
-    lo_todo->create( is_data ).
+    rs_key = lo_todo->create( is_data ).
 
   ENDMETHOD.
 
