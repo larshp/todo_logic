@@ -119,7 +119,7 @@ CLASS ZCL_TODO_SWAGGER IMPLEMENTATION.
 
     APPEND INITIAL LINE TO rt_meta ASSIGNING <ls_meta>.
     <ls_meta>-summary   = 'Update'(004).
-    <ls_meta>-url-regex = '/update/(w+)$'.
+    <ls_meta>-url-regex = '/update/(\w+)$'.
     APPEND 'IV_GUID' TO <ls_meta>-url-group_names.
     <ls_meta>-method    = zcl_swag=>c_method-post.
     <ls_meta>-handler   = 'UPDATE'.
